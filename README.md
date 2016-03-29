@@ -17,3 +17,11 @@ HINT: For a faster emulator, use an Intel System Image and install the HAXM devi
 sledi navodilom :)  
 1. namesti ustrezni "System image" z orodjem "Android SDK Manager" -> `android sdk`  
 2. Ustvari ustrezen "Android Virtual Device"z orodjem "Android Virtual Device Manager" -> `android avd`
+
+### Poganjanje na androidu  
+1. Priklopi svoj telefon na računalnik (obviously). :)  
+2. Poženi `cordova run --device`
+
+Če ne najde tvojega telefona:  
+1. Namesti programček `adb` -> `sudo apt-get install android-tools-adb`
+2. Omogoči USB debugging na svojem telefonu
