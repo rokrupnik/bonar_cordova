@@ -18,6 +18,7 @@ platforms/android/assets/
 # generated files
 bin/
 gen/
+.gradle/
 
 # Cordova
 node_modules/
