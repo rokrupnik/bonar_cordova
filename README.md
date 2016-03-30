@@ -25,3 +25,15 @@ sledi navodilom :)
 Če ne najde tvojega telefona:  
 1. Namesti programček `adb` -> `sudo apt-get install android-tools-adb`
 2. Omogoči USB debugging na svojem telefonu
+
+## Navodila number 2
+
+	git clone https://github.com/rokrupnik/bonar_cordova.git # clones the repo
+	cd bonar_cordova
+	npm install # installs all packages needed for development
+	gulp browser # test the app in the browser
+	gulp android # run the app on android device
+
+Za vec informacij glej gulpfile.js in package.json
+
+Rupnik, ko ti dela lahk zmergas oboja navodila.

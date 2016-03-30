@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "cordova": "*",
+    "cordova-lib": "*",
+    "jquery": "*",
+    "gulp": "*",
+    "del": "*",
+    "jshint": "*",
+    "jshint-stylish": "*",
+    "gulp-eslint": "*",
+    "browserify": "*",
+    "gulp-browserify": "*",
+    "sass": "*",
+    "gulp-sass": "*",
+    "gulp-copy2": "*"
+  }
+}
