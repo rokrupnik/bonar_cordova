@@ -23,5 +23,5 @@ sledi navodilom :)
 2. Poženi `cordova run --device`
 
 Če ne najde tvojega telefona:  
-1. Namesti programček `adb` -> `sudo apt-get install android-tools-adb`
-2. Omogoči USB debugging na svojem telefonu
+1. Namesti programček `adb` -> `sudo apt-get install android-tools-adb`  
+2. Omogoči USB debugging na svojem telefonu  
