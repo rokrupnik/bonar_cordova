@@ -71,6 +71,7 @@ gulp.task('sass', function () {
 gulp.task('copy', function() {
 	var paths = [
         {src: 'src/img/*', dest: 'www/img/'},
+        {src: 'node_modules/leaflet/dist/leaflet.css', dest: 'www/css/lib/'},
         {src: 'src/index.html', dest: 'www/index.html'},
         {src: 'src/js/restaurants.json', dest: 'www/js/restaurants.json'},
     ];
