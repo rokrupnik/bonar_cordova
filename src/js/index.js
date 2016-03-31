@@ -1,5 +1,19 @@
 var $ = require("jquery");
 var L = require("leaflet");
+var _ = require("lodash");
+
+var map;
+var markerIcon = L.icon({
+    iconUrl: 'img/lib/marker-icon.png',
+    iconAnchor: [0, 0]
+    /*iconRetinaUrl: 'my-icon@2x.png',
+    iconSize: [38, 95],
+    popupAnchor: [-3, -76],
+    shadowUrl: 'my-icon-shadow.png',
+    shadowRetinaUrl: 'my-icon-shadow@2x.png',
+    shadowSize: [68, 95],
+    shadowAnchor: [22, 94]*/
+});
 
 var app = {	
     // Application Constructor
@@ -38,13 +52,25 @@ var app = {
     loadData: function () {
         $.getJSON('js/restaurants.json')
             .then(function (data) {
-                app.updateStatus('Number of loaded restaurants: ' + data.length);
-                console.log('Number of loaded restaurants: ' + data.length);
+                //app.updateStatus('Number of loaded restaurants: ' + data.length);
+                //console.log('Number of loaded restaurants: ' + data.length);
+
+                _.forEach(data, function (restaurant) {
+                    var lat = restaurant.coordinates[0] * 1;
+                    var lon = restaurant.coordinates[1] * 1;
+                    L.marker([lat, lon], { icon: markerIcon })
+                        .bindPopup(
+                            restaurant.name + '<br />' +
+                            restaurant.address + '<br />' +
+                            restaurant.price + '<br />'
+                            )
+                        .addTo(map);
+                });
             });
     },
 
     initMap: function () {
-        var map = L.map('mapid');//.setView([46, 15], 13);
+        map = L.map('mapid');
         /*L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a>'
         }).addTo( map );*/
