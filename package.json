@@ -16,6 +16,7 @@
     "jshint-stylish": "*",
     "leaflet": "^0.7.7",
     "lodash": "^4.7.0",
-    "sass": "*"
+    "sass": "*",
+    "gulp-shell": "*"
   }
 }

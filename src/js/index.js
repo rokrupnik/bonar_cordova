@@ -50,12 +50,17 @@ var app = {
 
     // Load data
     loadData: function () {
-        $.getJSON('js/restaurants.json')
-            .then(function (data) {
-                //app.updateStatus('Number of loaded restaurants: ' + data.length);
-                //console.log('Number of loaded restaurants: ' + data.length);
-
-                _.forEach(data, function (restaurant) {
+        $.when(
+            $.getJSON('js/restaurants.json'),
+            $.getJSON('js/restaurant_clusters.json')
+        ).done(function (data, d2) {
+            //ugly, just testing...
+            data = data[0];
+            d2 = d2[0];
+            _.forEach(data, function (restaurant) {
+                if("Ljubljana" in d2)
+                {
+                    // continue with original code
                     var lat = restaurant.coordinates[0] * 1;
                     var lon = restaurant.coordinates[1] * 1;
                     L.marker([lat, lon], { icon: markerIcon })
@@ -65,8 +70,9 @@ var app = {
                             restaurant.price + '<br />'
                             )
                         .addTo(map);
-                });
+                }
             });
+        });
     },
 
     initMap: function () {
@@ -80,6 +86,10 @@ var app = {
 
         map.setView(new L.LatLng(46.0565274, 14.514713), 13);
         map.addLayer(osm);
+        
+        map.on('resize', function(e) {
+            console.log("Altitude changed: " + e);
+        });
     },
 
     updateStatus: function (status) {
