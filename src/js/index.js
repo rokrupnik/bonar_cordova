@@ -1,9 +1,10 @@
-var $ = require("jquery");
-var L = require("leaflet");
-var _ = require("lodash");
+var libs = require("Libraries");
+var $ = libs.$;
+var L = libs.L;
+var _ = libs._;
 
-var map;
-var markerIcon = L.icon({
+var map, markerIcon;
+markerIcon = L.icon({
     iconUrl: 'img/lib/marker-icon.png',
     iconAnchor: [0, 0]
     /*iconRetinaUrl: 'my-icon@2x.png',
@@ -88,7 +89,7 @@ var app = {
         map.addLayer(osm);
         
         map.on('resize', function(e) {
-            console.log("Altitude changed: " + e);
+            console.log("Resizing :: " + e);
         });
     },
 
