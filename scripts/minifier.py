@@ -8,13 +8,16 @@ def get_features(restaurants):
     features = {}
     for r in restaurants:
         for f in r["features"]:
-            _id = int(f["id"])
+            _id = f["id"]
             if _id in features:
                 assert f["title"] == features[_id]
             else:
                 features[_id] = f["title"]
 
-    return features
+    features_ret = list(features.values())
+    fmap = {i: j for i, j in zip(features.keys(), range(len(features_ret)))}
+
+    return features_ret, fmap
 
 
 def get_cities(restaurants):
@@ -45,7 +48,7 @@ def get_cities(restaurants):
 
 
 def minify(restaurants):
-    features = get_features(restaurants)
+    features, fmap = get_features(restaurants)
     restaurants, cities = get_cities(restaurants)
 
     min_rs = []
@@ -62,7 +65,7 @@ def minify(restaurants):
         r["coordinates"] = coor
 
         # Handle features
-        r["features"] = [f["id"] for f in r["features"]]
+        r["features"] = [fmap[f["id"]] for f in r["features"]]
 
         # We dont really need ids
         del r["id"]
