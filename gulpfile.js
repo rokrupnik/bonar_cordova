@@ -34,7 +34,6 @@ gulp.task('lint', function() {
     .pipe(eslint({
 		extends: 'eslint:recommended',
 		globals: {
-            "Uint8Array": true,
 			"require": true,
 			"Libraries": true,
 			"$": true,
@@ -70,9 +69,7 @@ gulp.task('sass', function () {
 
 // Build restaurant clusters
 gulp.task('clusters', shell.task([
-    'python ./scripts/link_clusters.py www/js/restaurants_min.json.tmp',
-    'gzip -c www/js/restaurants_min.json.tmp > www/js/restaurants_min.json.gz',
-    'rm www/js/restaurants_min.json.tmp'
+    'python ./scripts/link_clusters.py src/js/restaurants.json www/js/restaurant_clusters.json'
 ]));
 
 // Copy static files
@@ -89,7 +86,7 @@ gulp.task('copy', function() {
 });
 
 //gulp.task('prepare', ['lint', 'browserify', 'sass', 'clusters', 'copy', 'optimize'], function() {});
-gulp.task('prepare', ['lint', 'browserify', 'sass', 'clusters', 'copy'], function() {});
+gulp.task('prepare', ['lint', 'browserify', 'sass',  'copy'], function() {});
 
 gulp.task('android', ['prepare'], function(cb) {
     return cdv.run({platforms:['android'], options:['--device']});

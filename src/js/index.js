@@ -1,20 +1,9 @@
 var libs = require("Libraries");
 var $ = libs.$;
-var L = libs.L;
 var _ = libs._;
+var ol = libs.ol;
 
-var map, markerIcon;
-markerIcon = L.icon({
-    iconUrl: 'img/lib/marker-icon.png',
-    iconAnchor: [0, 0]
-    /*iconRetinaUrl: 'my-icon@2x.png',
-    iconSize: [38, 95],
-    popupAnchor: [-3, -76],
-    shadowUrl: 'my-icon-shadow.png',
-    shadowRetinaUrl: 'my-icon-shadow@2x.png',
-    shadowSize: [68, 95],
-    shadowAnchor: [22, 94]*/
-});
+var map, vectorSource, clusterSource;
 
 var app = {	
     // Application Constructor
@@ -34,9 +23,9 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
         //app.receivedEvent('deviceready');
-        app.loadData();
         app.initMap();
-        app.geolocation();
+        app.loadData();
+        //app.geolocation();
     },
     
     // Update DOM on a Received Event
@@ -47,8 +36,6 @@ var app = {
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
     },
     
     // Get location
@@ -74,46 +61,59 @@ var app = {
 
     // Load data
     loadData: function () {
-        $.when(
-            $.getJSON('js/restaurants.json'),
-            $.getJSON('js/restaurant_clusters.json')
-        ).done(function (data, d2) {
-            //ugly, just testing...
-            data = data[0];
-            d2 = d2[0];
-            _.forEach(data, function (restaurant) {
-                if("Ljubljana" in d2)
-                {
-                    // continue with original code
-                    var lat = restaurant.coordinates[0] * 1;
-                    var lon = restaurant.coordinates[1] * 1;
-                    L.marker([lat, lon], { icon: markerIcon })
-                        .bindPopup(
-                            restaurant.name + '<br />' +
-                            restaurant.address + '<br />' +
-                            restaurant.price + '<br />'
-                            )
-                        .addTo(map);
-                }
+        $.getJSON('js/restaurants.json')
+        .done(function (data) {
+
+            vectorSource = new ol.source.Vector();
+
+            _.forEach(data.restaurants, function (restaurant) {
+                var point = new ol.geom.Point(ol.proj.fromLonLat(restaurant.coordinates.reverse()));
+                var feat = new ol.Feature(point);
+                vectorSource.addFeature(feat);
             });
+
+            clusterSource = new ol.source.Cluster({
+                source: vectorSource,
+                distance: 20
+            });
+
+            map.addLayer(new ol.layer.Vector({
+                source: clusterSource,
+                style: new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        stroke: new ol.style.Stroke({
+                            color: '#3399ff',
+                            width: 2
+                        }),
+                        fill: new ol.style.Fill({
+                            color: 'black'
+                        })
+                    })
+                })
+            }));
         });
     },
 
     initMap: function () {
-        map = L.map('mapid');
-        /*L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a>'
-        }).addTo( map );*/
-        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib = 'Map data © OpenStreetMap contributors';
-        var osm = new L.TileLayer(osmUrl, { attribution: osmAttrib });
+        /*********************************** OPENLAYERS ***********************************/
 
-        map.setView(new L.LatLng(46.0565274, 14.514713), 13);
-        map.addLayer(osm);
-        
-        map.on('resize', function(e) {
-            console.log("Resizing :: " + e);
+
+        map = new ol.Map({
+            target: 'mapid',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.MapQuest({layer: 'osm'})
+                })
+            ]
         });
+
+        map.setView(new ol.View({
+                center: ol.proj.fromLonLat([14.514713, 46.0565274]),
+                zoom: 13
+            }));
+
+        
     },
 
     updateStatus: function (status) {

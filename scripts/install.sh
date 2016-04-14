@@ -29,6 +29,7 @@ then
   
   cordova plugin add cordova-plugin-splashscreen
   cordova plugin add cordova-plugin-geolocation
+  cordova plugin add cordova-plugin-console
   
   cordova platform add browser
   cordova platform add android

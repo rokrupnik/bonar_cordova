@@ -42,5 +42,10 @@
         <splash src="www/img/splash.png" density="port-xhdpi"/>
         
     </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+    <plugin name="cordova-plugin-console" spec="~1.0.2" />
     <engine name="android" spec="^4.1" />
 </widget>
