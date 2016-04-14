@@ -51,7 +51,7 @@ gulp.task('lint', function() {
  
 gulp.task('optimize', ["browserify"], function() {
   return gulp.src('www/js/include.js')
-    .pipe(uglify())
+    //.pipe(uglify()) // this took like a minute on my poor laptop :P
     .pipe(gulp.dest('www/js'));
 });
 
@@ -85,7 +85,7 @@ gulp.task('copy', function() {
 	return copy(paths);
 });
 
-gulp.task('prepare', ['lint', 'browserify', 'sass', 'clusters', 'copy', 'optimize'], function() {});
+gulp.task('prepare', ['lint', 'browserify', 'sass', /*'clusters',*/ 'copy', 'optimize'], function() {});
 
 gulp.task('android', ['prepare'], function(cb) {
     return cdv.run({platforms:['android'], options:['--device']});

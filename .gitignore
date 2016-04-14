@@ -13,9 +13,9 @@
 # generated files - android project subfolder
 Android/bin/
 Android/gen/
-platforms/android/assets/
-platforms/browser/
-www/
+/platforms
+/plugins
+/www/
 
 # generated files
 bin/
@@ -30,3 +30,5 @@ CordovaLib/
 .project
 .settings/
 
+# temp files
+*~
