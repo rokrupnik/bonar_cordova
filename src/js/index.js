@@ -1,10 +1,9 @@
 var libs = require("Libraries");
 var $ = libs.$;
-//var L = libs.L;
-//var _ = libs._;
+var _ = libs._;
 var ol = libs.ol;
 
-var map;
+var map, vectorSource, clusterSource;
 
 var app = {	
     // Application Constructor
@@ -24,9 +23,9 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
         //app.receivedEvent('deviceready');
-        app.loadData();
         app.initMap();
-        app.geolocation();
+        app.loadData();
+        //app.geolocation();
     },
     
     // Update DOM on a Received Event
@@ -63,35 +62,42 @@ var app = {
     // Load data
     loadData: function () {
         $.getJSON('js/restaurants.json')
-        .done(function (data/*, d2*/) {
-            //ugly, just testing...
-            data = data[0];
+        .done(function (data) {
 
+            vectorSource = new ol.source.Vector();
 
-            //app.updateStatus(data.length);
+            _.forEach(data.restaurants, function (restaurant) {
+                var point = new ol.geom.Point(ol.proj.fromLonLat(restaurant.coordinates.reverse()));
+                var feat = new ol.Feature(point);
+                vectorSource.addFeature(feat);
+            });
 
+            clusterSource = new ol.source.Cluster({
+                source: vectorSource,
+                distance: 20
+            });
 
-            //d2 = d2[0];
-            /*_.forEach(data, function (restaurant) {
-                if("Ljubljana" in d2)
-                {
-                    // continue with original code
-                    var lat = restaurant.coordinates[0] * 1;
-                    var lon = restaurant.coordinates[1] * 1;
-                    L.marker([lat, lon], { icon: markerIcon })
-                        .bindPopup(
-                            restaurant.name + '<br />' +
-                            restaurant.address + '<br />' +
-                            restaurant.price + '<br />'
-                            )
-                        .addTo(map);
-                }
-            });*/
+            map.addLayer(new ol.layer.Vector({
+                source: clusterSource,
+                style: new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        stroke: new ol.style.Stroke({
+                            color: '#3399ff',
+                            width: 2
+                        }),
+                        fill: new ol.style.Fill({
+                            color: 'black'
+                        })
+                    })
+                })
+            }));
         });
     },
 
     initMap: function () {
         /*********************************** OPENLAYERS ***********************************/
+
 
         map = new ol.Map({
             target: 'mapid',
@@ -107,23 +113,7 @@ var app = {
                 zoom: 13
             }));
 
-        //app.updateStatus('OLMap init success');
-
-        /*********************************** LEAFLET **********************************/
-        //map = L.map('mapid');
-        /*L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a>'
-        }).addTo( map );*/
-        /*var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib = 'Map data © OpenStreetMap contributors';
-        var osm = new L.TileLayer(osmUrl, { attribution: osmAttrib });
-
-        map.setView(new L.LatLng(46.0565274, 14.514713), 13);
-        map.addLayer(osm);
         
-        map.on('resize', function(e) {
-            console.log("Resizing :: " + e);
-        });*/
     },
 
     updateStatus: function (status) {
