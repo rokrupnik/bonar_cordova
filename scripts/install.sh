@@ -26,7 +26,10 @@ fi
 if ! [[ -d plugins || $0 == "bash" ]]
 then
   echo "Installing plugins and platforms..."
+  
   cordova plugin add cordova-plugin-splashscreen
+  cordova plugin add cordova-plugin-geolocation
+  
   cordova platform add browser
   cordova platform add android
 fi
