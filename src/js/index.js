@@ -1,20 +1,10 @@
 var libs = require("Libraries");
 var $ = libs.$;
-var L = libs.L;
-var _ = libs._;
+//var L = libs.L;
+//var _ = libs._;
+var ol = libs.ol;
 
-var map, markerIcon;
-markerIcon = L.icon({
-    iconUrl: 'img/lib/marker-icon.png',
-    iconAnchor: [0, 0]
-    /*iconRetinaUrl: 'my-icon@2x.png',
-    iconSize: [38, 95],
-    popupAnchor: [-3, -76],
-    shadowUrl: 'my-icon-shadow.png',
-    shadowRetinaUrl: 'my-icon-shadow@2x.png',
-    shadowSize: [68, 95],
-    shadowAnchor: [22, 94]*/
-});
+var map;
 
 var app = {	
     // Application Constructor
@@ -45,20 +35,21 @@ var app = {
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
     },
 
     // Load data
     loadData: function () {
-        $.when(
-            $.getJSON('js/restaurants.json'),
-            $.getJSON('js/restaurant_clusters.json')
-        ).done(function (data, d2) {
+        $.getJSON('js/restaurants.json')
+        .done(function (data/*, d2*/) {
             //ugly, just testing...
             data = data[0];
-            d2 = d2[0];
-            _.forEach(data, function (restaurant) {
+
+
+            //app.updateStatus(data.length);
+
+
+            //d2 = d2[0];
+            /*_.forEach(data, function (restaurant) {
                 if("Ljubljana" in d2)
                 {
                     // continue with original code
@@ -72,16 +63,35 @@ var app = {
                             )
                         .addTo(map);
                 }
-            });
+            });*/
         });
     },
 
     initMap: function () {
-        map = L.map('mapid');
+        /*********************************** OPENLAYERS ***********************************/
+
+        map = new ol.Map({
+            target: 'mapid',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.MapQuest({layer: 'osm'})
+                })
+            ]
+        });
+
+        map.setView(new ol.View({
+                center: ol.proj.fromLonLat([14.514713, 46.0565274]),
+                zoom: 13
+            }));
+
+        //app.updateStatus('OLMap init success');
+
+        /*********************************** LEAFLET **********************************/
+        //map = L.map('mapid');
         /*L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a>'
         }).addTo( map );*/
-        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        /*var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib = 'Map data © OpenStreetMap contributors';
         var osm = new L.TileLayer(osmUrl, { attribution: osmAttrib });
 
@@ -90,7 +100,7 @@ var app = {
         
         map.on('resize', function(e) {
             console.log("Resizing :: " + e);
-        });
+        });*/
     },
 
     updateStatus: function (status) {

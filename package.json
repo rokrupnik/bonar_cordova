@@ -2,20 +2,21 @@
   "repository": "https://github.com/rokrupnik/bonar_cordova.git",
   "license": "GPL-3.0",
   "dependencies": {
+    "browserify": "*",
     "cordova": "*",
     "cordova-lib": "*",
     "del": "*",
     "gulp": "*",
-    "browserify": "*",
     "gulp-copy2": "*",
     "gulp-eslint": "*",
     "gulp-sass": "*",
+    "gulp-shell": "*",
+    "gulp-uglify": "*",
     "jquery": "*",
     "jshint": "*",
     "leaflet": "^0.7.7",
     "lodash": "^4.7.0",
-    "sass": "*",
-    "gulp-shell": "*",
-    "gulp-uglify": "*"
+    "openlayers": "^3.15.1",
+    "sass": "*"
   }
 }
