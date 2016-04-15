@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r"
+   width="46.797844"
+   height="78.000557"
+   viewBox="0 0 46.797844 78.000557"
+   sodipodi:docname="pin.svg"
+   inkscape:export-filename="/home/rok/CordovaProjects/Bonar/src/img/pin-cluster.png"
+   inkscape:export-xdpi="71.720161"
+   inkscape:export-ydpi="71.720161">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1028"
+     id="namedview4"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="4.3065084"
+     inkscape:cx="-10.324083"
+     inkscape:cy="69.904415"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <path
+     id="path4145"
+     style="fill:#8ea604;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="m 29.876573,30.028926 c 6.262909,-5.667853 2.067032,-16.409217 -6.409898,-16.409217 -5.718686,0 -9.22009,3.615621 -9.22009,9.520852 0,8.168898 9.559628,12.381967 15.629988,6.888365 z M 14.41593,60.989625 C 5.5392483,41.218972 0.97317834,27.996847 1.0001253,22.141028 c 0.02656,-5.770914 4.51551,-13.6351503 9.8256637,-17.213662 11.117425,-7.4920314 25.63113,-3.99541418 32.301676,7.782066 3.635552,6.418908 3.572409,11.782352 -0.27177,23.084706 -5.358451,15.7545 -17.326483,41.206422 -19.376132,41.206422 -1.194925,0 -4.482365,-5.807273 -9.063633,-16.010935 z"
+     inkscape:connector-curvature="0" />
+</svg>
