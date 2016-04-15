@@ -91,8 +91,12 @@ gulp.task('android', ['prepare'], function(cb) {
     return cdv.run({platforms:['android'], options:['--device']});
 });
 
-gulp.task('browser', ['prepare'], function() {
+gulp.task('browser', ['prepare', 'watch'], function() {
     return cdv.run({platforms:['browser'], options:['--target=' + browser]});
 });
 
 gulp.task('clean', function(cb) {del(['www'], cb);});
+
+gulp.task('watch', function () {
+    gulp.watch(['src/js/*.js', 'src/index.html'], ['prepare']);
+});
