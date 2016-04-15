@@ -76,7 +76,8 @@ gulp.task('clusters', shell.task([
 gulp.task('copy', function() {
 	var paths = [
         {src: 'src/img/**', dest: 'www/img/'},
-        {src: 'node_modules/leaflet/dist/leaflet.css', dest: 'www/css/lib/'},
+        {src: 'node_modules/bootstrap/dist/css/bootstrap.css', dest: 'www/css/lib/'},
+        {src: 'node_modules/openlayers/dist/ol-debug.css', dest: 'www/css/lib/'},
         {src: 'src/index.html', dest: 'www/index.html'},
         {src: 'src/js/restaurants.json', dest: 'www/js/restaurants.json'},
 
@@ -91,12 +92,12 @@ gulp.task('android', ['prepare'], function(cb) {
     return cdv.run({platforms:['android'], options:['--device']});
 });
 
-gulp.task('browser', ['prepare', 'watch'], function() {
+gulp.task('browser', ['prepare'], function() {
     return cdv.run({platforms:['browser'], options:['--target=' + browser]});
 });
 
 gulp.task('clean', function(cb) {del(['www'], cb);});
 
-gulp.task('watch', function () {
-    gulp.watch(['src/js/*.js', 'src/index.html'], ['prepare']);
+gulp.task('watch:browser', function () {
+    gulp.watch(['src/js/*.js', 'src/index.html'], ['browser']);
 });
