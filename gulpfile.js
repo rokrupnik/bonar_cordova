@@ -85,7 +85,11 @@ gulp.task('copy', function() {
 	return copy(paths);
 });
 
-//gulp.task('prepare', ['lint', 'browserify', 'sass', 'clusters', 'copy', 'optimize'], function() {});
+gulp.task('splash', ['copy'], shell.task([
+    './scripts/splash.sh'
+]));
+
+//gulp.task('prepare', ['lint', 'browserify', 'sass', 'clusters', 'copy', 'optimize', 'splash'], function() {});
 gulp.task('prepare', ['lint', 'browserify', 'sass',  'copy'], function() {});
 
 gulp.task('android', ['prepare'], function(cb) {
