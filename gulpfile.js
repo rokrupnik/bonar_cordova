@@ -51,7 +51,7 @@ gulp.task('lint', function() {
  
 gulp.task('optimize', ["browserify"], function() {
   return gulp.src('www/js/include.js')
-    //.pipe(uglify()) // this took like a minute on my poor laptop :P
+    .pipe(uglify())
     .pipe(gulp.dest('www/js'));
 });
 
@@ -69,7 +69,9 @@ gulp.task('sass', function () {
 
 // Build restaurant clusters
 gulp.task('clusters', shell.task([
-    'python ./scripts/link_clusters.py src/js/restaurants.json www/js/restaurant_clusters.json'
+    'python ./scripts/link_clusters.py www/js/restaurants.json',
+    //'gzip -nc www/js/restaurants.json > www/js/restaurants.json.gz',
+    //'rm www/js/restaurants.json'
 ]));
 
 // Copy static files
@@ -79,14 +81,18 @@ gulp.task('copy', function() {
         {src: 'node_modules/bootstrap/dist/css/bootstrap.css', dest: 'www/css/lib/'},
         {src: 'node_modules/openlayers/dist/ol-debug.css', dest: 'www/css/lib/'},
         {src: 'src/index.html', dest: 'www/index.html'},
-        {src: 'src/js/restaurants.json', dest: 'www/js/restaurants.json'},
 
         {src: 'src/js/index.js', dest: 'www/js/index.js'},
     ];
 	return copy(paths);
 });
 
-gulp.task('prepare', ['lint', 'browserify', 'sass', /*'clusters',*/ 'copy', 'optimize'], function() {});
+gulp.task('splash', ['copy'], shell.task([
+    './scripts/splash.sh'
+]));
+
+//gulp.task('prepare', ['lint', 'browserify', 'sass', 'clusters', 'copy', 'optimize', 'splash'], function() {});
+gulp.task('prepare', ['lint', 'browserify', 'sass',  'copy'], function() {});
 
 gulp.task('android', ['prepare'], function(cb) {
     return cdv.run({platforms:['android'], options:['--device']});

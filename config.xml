@@ -24,6 +24,7 @@
     <preference name="SplashScreen"                 value="screen" />
     
     <plugin name="cordova-plugin-geolocation"       spec="1.0.0" />
+
     
     <platform name="android">
         <allow-intent href="market:*" />
@@ -32,15 +33,7 @@
         <icon src="www/img/icon.png" density="hdpi" />
         <icon src="www/img/icon.png" density="xhdpi" />
         
-        <splash src="www/img/icon.png" density="land-hdpi"/>
-        <splash src="www/img/icon.png" density="land-ldpi"/>
-        <splash src="www/img/icon.png" density="land-mdpi"/>
-        <splash src="www/img/icon.png" density="land-xhdpi"/>
-        <splash src="www/img/icon.png" density="port-hdpi"/>
-        <splash src="www/img/icon.png" density="port-ldpi"/>
-        <splash src="www/img/icon.png" density="port-mdpi"/>
-        <splash src="www/img/icon.png" density="port-xhdpi"/>
-        
+        <splash src="www/img/splash.png"/>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
