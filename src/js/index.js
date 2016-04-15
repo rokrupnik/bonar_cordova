@@ -53,11 +53,17 @@ var contentFun = function (feature) {
     var content = '';
 
     if (features.length > 1) {
-        content = 'Na tem mestu je več restavracij, približaj za več info.';
+        content = 'Na tem mestu je več restavracij.<br />Približaj za več info.';
     } else {
         feature = features[0];
-        content = feature.get('price');
+
+        content = feature.get('name') + '<br />';
+        content += feature.get('address') + '<br />';
+        content += feature.get('price') + ' &euro;<br />';
+        content += feature.get('opening');
     }
+
+    //console.log(content);
 
     return content;
 }
@@ -123,7 +129,25 @@ var app = {
             _.forEach(data.restaurants, function (restaurant) {
                 var point = new ol.geom.Point(ol.proj.fromLonLat(restaurant.coordinates.reverse()));
                 var feat = new ol.Feature(point);
+                //console.log(restaurant);
+
+                feat.set('name', restaurant.name);
+                feat.set('address', restaurant.address);
                 feat.set('price', restaurant.price);
+
+                var opening = restaurant.opening.week[0];
+                opening += "-" + restaurant.opening.week[1];
+                if (restaurant.opening.saturday) {
+                    opening += ", sob: " + restaurant.opening.saturday[0];
+                    opening += "-" + restaurant.opening.saturday[1];
+                }
+                if (restaurant.opening.sunday) {
+                    opening += ", ned: " + restaurant.opening.sunday[0];
+                    opening += "-" + restaurant.opening.sunday[1];
+                }
+
+                feat.set('opening', opening);
+
                 vectorSource.addFeature(feat);
             });
         });
@@ -195,6 +219,13 @@ var app = {
             var hit = map.hasFeatureAtPixel(pixel);
             map.getTargetElement().style.cursor = hit ? 'pointer' : '';
         });
+
+        // hide popover on zoom - not working right now
+        /*var mouseWheelZooom = new ol.interaction.MouseWheelZoom();
+        mouseWheelZooom.on('change:active', function () {
+            $('#popover').popover('hide');
+        });
+        map.addInteraction(mouseWheelZooom);*/
     }, 
 
     updateStatus: function (status) {
