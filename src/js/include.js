@@ -1,7 +1,8 @@
-var $ = require("jquery");
+var $ = window.$ = window.jQuery = require("jquery"); // Needed to add to window because of bootstrap and browserify combo
 var _ = require("lodash");
 var L = require("leaflet");
 var ol = require("openlayers");
+var bootstrap = require("bootstrap");
 
 var Libraries = {
     "L": L,
