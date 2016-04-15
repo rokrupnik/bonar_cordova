@@ -69,7 +69,9 @@ gulp.task('sass', function () {
 
 // Build restaurant clusters
 gulp.task('clusters', shell.task([
-    'python ./scripts/link_clusters.py src/js/restaurants.json www/js/restaurant_clusters.json'
+    'python ./scripts/link_clusters.py www/js/restaurants.json',
+    //'gzip -nc www/js/restaurants.json > www/js/restaurants.json.gz',
+    //'rm www/js/restaurants.json'
 ]));
 
 // Copy static files
@@ -78,7 +80,6 @@ gulp.task('copy', function() {
         {src: 'src/img/**', dest: 'www/img/'},
         {src: 'node_modules/leaflet/dist/leaflet.css', dest: 'www/css/lib/'},
         {src: 'src/index.html', dest: 'www/index.html'},
-        {src: 'src/js/restaurants.json', dest: 'www/js/restaurants.json'},
 
         {src: 'src/js/index.js', dest: 'www/js/index.js'},
     ];
