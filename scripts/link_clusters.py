@@ -2,7 +2,7 @@ import sys
 from collections import defaultdict
 from os.path import isfile
 import json
-
+import requests
 
 def get_features(restaurants):
     features = {}
@@ -80,28 +80,26 @@ def minify(restaurants):
     }
 
 if __name__ == '__main__':
-    if not 3 <= len(sys.argv) <= 4:
+    if not 2 <= len(sys.argv) <= 3:
         print(
-            "Usage: minifier.py <path_to_restaurants.json> <output_path> [True/False] \n \
+            "Usage: minifier.py <output_path> [True/False] \n \
             Last one is for plotting, default False"
         )
         sys.exit(1)
 
-    plotting = len(sys.argv) == 4 and sys.argv[3] == "True"
-    f_in = sys.argv[1]
-    f_out = sys.argv[2]
+    plotting = len(sys.argv) == 3 and sys.argv[2] == "True"
+    f_out = sys.argv[1]
 
     if isfile(f_out):
         print("Output file already exists!")
         sys.exit(0)
-
-    if not isfile(f_in):
-        print("Input file does not exist!")
+    
+    req = requests.get("http://bonar.si/api/restaurants")
+    if req.status_code >= 400:
+        print("Could not download data.")
         sys.exit(1)
-
-    with open(f_in) as fp:
-        restaurants = json.load(fp)
-
+    
+    restaurants = json.loads(req.text)
     to_ret = minify(restaurants)
 
     with open(f_out, "w") as fp:
