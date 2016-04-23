@@ -2,6 +2,7 @@ var libs = require('Libraries');
 var $ = libs.$;
 var _ = libs._;
 var ol = libs.ol;
+//var tl = libs.tl;
 
 var map, vectorSource, clusterSource;
 var restaurantStyleFun = function (feature) {
@@ -88,6 +89,8 @@ var app = {
         //app.receivedEvent('deviceready');
         app.initMap();
         app.loadData();
+        app.resizer();
+        
         //app.geolocation();
     },
     
@@ -172,7 +175,9 @@ var app = {
                     source: clusterSource,
                     style: restaurantStyleFun
                 })
-            ]
+            ],
+            // Disable rotate
+            interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false})
         });
 
         map.setView(new ol.View({
@@ -227,6 +232,18 @@ var app = {
         });
         map.addInteraction(mouseWheelZooom);*/
     }, 
+    
+    resizer: function () {
+        var resizeFun = function() {
+            var mapel = $(".app");
+            var height = $(window).height() - 80;
+            mapel.css("height", height);
+            mapel.css("width", $(window).width());
+            map.updateSize();
+        };
+        resizeFun()
+        $(window).resize(resizeFun);
+    },
 
     updateStatus: function (status) {
         $('#status').text(status);
