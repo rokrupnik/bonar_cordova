@@ -80,6 +80,17 @@ body {
   position: relative;
 }
 
+.footer-img {  
+  border: 1px solid;
+  border-radius: 4px;
+  border-color: $red-color;
+}
+
+.tab-active {
+  border-color: white;
+}
+
+
 h1 {
     font-size:24px;
     font-weight:normal;
