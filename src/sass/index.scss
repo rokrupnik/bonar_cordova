@@ -20,6 +20,9 @@
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
 
+$footer-height: 50px;
+$red-color: #CD323C;
+
 html {
   //position: relative;
   height: 100%;
@@ -42,16 +45,16 @@ body {
 /* Portrait layout (default) */
 .app {
     position:relative;             /* position in the center of the screen */
-    text-align:center;
+    //text-align:center;
     
     // Width and height computed dynamically
     //height:100%;                   /* text area height */
     //width:100%;                   /* text area width */
     
-    
     padding: 0;
     margin: 0;
-    margin-bottom: 80px;
+    margin-bottom: $footer-height;
+    //overflow:hidden;
 }
 
 .app:after {
@@ -69,6 +72,13 @@ body {
                                         /* offset horizontal: half of image width and text area width
     }
 } */
+
+.tab {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
 
 h1 {
     font-size:24px;
@@ -121,7 +131,7 @@ h1 {
   z-index: 100;
   /* top: -500px;
   left: -500px;
-  bottom: 80px; */
+  bottom: $footer-height; */
   position: relative;
 }
 
@@ -141,17 +151,17 @@ h1 {
   position: absolute;
   left: 0;
   bottom: 0;
-  height: 80px;
+  height: $footer-height;
   width: 100%;
   
-  background: orange;
+  background: $red-color;
   z-index: 300;
   
   ul {
     height: 100%;
     margin: 0;
     list-style-type: none;
-    line-height: 80px;
+    line-height: $footer-height;
     text-align: center;
     padding-left: 0;
     
@@ -164,10 +174,11 @@ h1 {
       float: left;
       
       img {
-        margin-top: 7px;
-        margin-bottom: 5px;
-        height: 65px;
-        filter: invert(100%);
+        //margin-top: $footer-height * 0.08;
+        //margin-bottom: $footer-height * 0.08;
+        margin: auto;
+        height: $footer-height * 0.8;
+        cursor: pointer;
       }
     }
   }

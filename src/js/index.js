@@ -4,104 +4,44 @@ var _ = libs._;
 var ol = libs.ol;
 //var tl = libs.tl;
 
-var map, vectorSource, clusterSource;
-var restaurantStyleFun = function (feature) {
-    // color schemes for pins: https://coolors.co/app/e86500-8ea604-f5bb00-ec9f05-bf3100
-    var features = feature.get('features');
-    var iconSrc = 'img/';
-
-    if (features.length > 1) {
-        iconSrc += 'pin-cluster.png';
-    } else {
-        feature = features[0];
-        var priceRange = parseInt(feature.get('price'));
-        switch(priceRange) {
-            case 0:
-                iconSrc += 'pin-0.png';
-                break;
-            case 1:
-                iconSrc += 'pin-1.png';
-                break;
-            case 2:
-                iconSrc += 'pin-2.png';
-                break;
-            case 3:
-                iconSrc += 'pin-3.png';
-                break;
-            case 4:
-                iconSrc += 'pin-4.png';
-                break;
-            default:
-                iconSrc += 'pin-cluster.png';
-        }
-    }
-
-    var style = new ol.style.Style({
-        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-            anchor: [0.5, 1],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            scale: 0.5,
-            src: iconSrc
-        }))
-    });
-
-    return [style];
-};
-
-var contentFun = function (feature) {
-    var features = feature.get('features');
-    var content = '';
-
-    if (features.length > 1) {
-        content = 'Na tem mestu je več restavracij.<br />Približaj za več info.';
-    } else {
-        feature = features[0];
-
-        content = feature.get('name') + '<br />';
-        content += feature.get('address') + '<br />';
-        content += feature.get('price') + ' &euro;<br />';
-        content += feature.get('opening');
-    }
-
-    //console.log(content);
-
-    return content;
-}
+var clusterSource;
 
 var app = {	
     // Application Constructor
     initialize: function () {
         this.bindEvents();
     },
-    // Bind Event Listeners
-    //
+    
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
+    
     // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
-        //app.receivedEvent('deviceready');
-        app.initMap();
+        // First start loading data
         app.loadData();
-        app.resizer();
         
-        //app.geolocation();
+        // Init everything else
+        app.initVariables();
+        app.map.init();
+        app.InitFooterImgClick();
+        app.geolocation();
+        app.switchTab("map");
+        
+        // Hopefully this will correctly reset the map
+        app.map.initResizer();
     },
     
-    // Update DOM on a Received Event
-    receivedEvent: function (id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+    // Run after all data in app.loadData is loaded
+    onDataLoaded: function() {
+        app.map.loadRestaurants();
+    },
+    
+    initVariables: function() {
+        var fh = $(".site-footer").css("height");
+        app.footerHeight = parseInt(fh.substring(0, fh.length - 2));
     },
     
     // Get location
@@ -124,15 +64,184 @@ var app = {
 
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
     },
-
+    
     // Load data
     loadData: function () {
         $.getJSON('js/restaurants.json')
-        .done(function (data) {
-            _.forEach(data.restaurants, function (restaurant) {
+        .done(function (data) { 
+            app.restaurants = data.restaurants; 
+            app.onDataLoaded();
+        });
+    },
+    
+    switchTab: function (tab) {
+        $(".tab").css("display", "none");
+        $("#tab-" + tab).css("display", "initial");
+    },
+    
+    InitFooterImgClick: function() {
+        $(".site-footer ul li img").on("click", function() {
+            app.switchTab($(this).attr("name"));
+        });
+    },
+    
+    map: {
+        init: function () {
+            
+            app.map.vectorSource = new ol.source.Vector();
+
+            clusterSource = new ol.source.Cluster({
+                source: app.map.vectorSource,
+                distance: 20
+            });
+
+            app.map.map = new ol.Map({
+                target: 'mapid',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.MapQuest({layer: 'osm'})
+                    }),
+                    new ol.layer.Vector({
+                        source: clusterSource,
+                        style: app.map.restaurantStyleFun
+                    })
+                ],
+                // Disable rotate
+                interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false})
+            });
+
+            app.map.map.setView(new ol.View({
+                center: ol.proj.fromLonLat([14.514713, 46.0565274]),
+                zoom: 13
+            }));
+
+            var element = document.getElementById('popup');
+            var popup = new ol.Overlay({
+                element: element,
+                positioning: 'bottom-center',
+                stopEvent: false
+            });
+            app.map.map.addOverlay(popup);
+            $(element).popover({
+                'placement': 'top',
+                'html': true,
+                'content': function() {
+                    return $('#popover-content').html();
+                }
+            });
+
+            // display popup on click
+            app.map.map.on('click', function(evt) {
+                var feature = app.map.map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+                    return feature;
+                });
+                if (feature) {
+                    popup.setPosition(evt.coordinate);
+                    $('#popover-content').html(app.map.contentFun(feature));
+                    $(element).popover('show');
+                } else {
+                    $(element).popover('hide');
+                }
+            });
+
+            // change mouse cursor when over marker
+            $(app.map.map.getViewport()).on('mousemove', function(e) {
+                if (e.dragging) {
+                    $(element).popover('hide');
+                    return;
+                }
+                var pixel = app.map.map.getEventPixel(e.originalEvent);
+                var hit = app.map.map.hasFeatureAtPixel(pixel);
+                app.map.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+            });
+
+            // hide popover on zoom - not working right now
+            /*var mouseWheelZooom = new ol.interaction.MouseWheelZoom();
+            mouseWheelZooom.on('change:active', function () {
+                $('#popover').popover('hide');
+            });
+            map.addInteraction(mouseWheelZooom);*/
+        }, 
+        
+        
+        restaurantStyleFun: function (feature) {
+            // color schemes for pins: https://coolors.co/app/e86500-8ea604-f5bb00-ec9f05-bf3100
+            var features = feature.get('features');
+            var iconSrc = 'img/';
+
+            if (features.length > 1) {
+                iconSrc += 'pin-cluster.png';
+            } else {
+                feature = features[0];
+                var priceRange = parseInt(feature.get('price'));
+                switch(priceRange) {
+                    case 0:
+                        iconSrc += 'pin-0.png';
+                        break;
+                    case 1:
+                        iconSrc += 'pin-1.png';
+                        break;
+                    case 2:
+                        iconSrc += 'pin-2.png';
+                        break;
+                    case 3:
+                        iconSrc += 'pin-3.png';
+                        break;
+                    case 4:
+                        iconSrc += 'pin-4.png';
+                        break;
+                    default:
+                        iconSrc += 'pin-cluster.png';
+                }
+            }
+
+            var style = new ol.style.Style({
+                image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                    anchor: [0.5, 1],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    scale: 0.5,
+                    src: iconSrc
+                }))
+            });
+
+            return [style];
+        },
+        
+        contentFun: function (feature) {
+            var features = feature.get('features');
+            var content = '';
+
+            if (features.length > 1) {
+                content = 'Na tem mestu je več restavracij.<br />Približaj za več info.';
+            } else {
+                feature = features[0];
+
+                content = feature.get('name') + '<br />';
+                content += feature.get('address') + '<br />';
+                content += feature.get('price') + ' &euro;<br />';
+                content += feature.get('opening');
+            }
+            return content;
+        },
+            
+        initResizer: function () {
+            var resizeFun = function() {
+                var mapel = $(".app");                
+                mapel.css("height", $("body").height() - app.footerHeight);
+                mapel.css("width", $("body").width());
+                app.map.map.updateSize();
+            };
+            
+            resizeFun()
+            $(window).resize(resizeFun);
+        },
+        
+        // Load pins in map
+        loadRestaurants: function () {
+            _.forEach(app.restaurants, function (restaurant) {
                 var point = new ol.geom.Point(ol.proj.fromLonLat(restaurant.coordinates.reverse()));
                 var feat = new ol.Feature(point);
-                //console.log(restaurant);
 
                 feat.set('name', restaurant.name);
                 feat.set('address', restaurant.address);
@@ -151,103 +260,10 @@ var app = {
 
                 feat.set('opening', opening);
 
-                vectorSource.addFeature(feat);
+                app.map.vectorSource.addFeature(feat);
             });
-        });
-    },
-
-    initMap: function () {
-
-        vectorSource = new ol.source.Vector();
-
-        clusterSource = new ol.source.Cluster({
-            source: vectorSource,
-            distance: 20
-        });
-
-        map = new ol.Map({
-            target: 'mapid',
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.MapQuest({layer: 'osm'})
-                }),
-                new ol.layer.Vector({
-                    source: clusterSource,
-                    style: restaurantStyleFun
-                })
-            ],
-            // Disable rotate
-            interactions: ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false})
-        });
-
-        map.setView(new ol.View({
-            center: ol.proj.fromLonLat([14.514713, 46.0565274]),
-            zoom: 13
-        }));
-
-        var element = document.getElementById('popup');
-        var popup = new ol.Overlay({
-            element: element,
-            positioning: 'bottom-center',
-            stopEvent: false
-        });
-        map.addOverlay(popup);
-        $(element).popover({
-            'placement': 'top',
-            'html': true,
-            'content': function() {
-                return $('#popover-content').html();
-            }
-        });
-
-        // display popup on click
-        map.on('click', function(evt) {
-            var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-                return feature;
-            });
-            if (feature) {
-                popup.setPosition(evt.coordinate);
-                $('#popover-content').html(contentFun(feature));
-                $(element).popover('show');
-            } else {
-                $(element).popover('hide');
-            }
-        });
-
-        // change mouse cursor when over marker
-        $(map.getViewport()).on('mousemove', function(e) {
-            if (e.dragging) {
-                $(element).popover('hide');
-                return;
-            }
-            var pixel = map.getEventPixel(e.originalEvent);
-            var hit = map.hasFeatureAtPixel(pixel);
-            map.getTargetElement().style.cursor = hit ? 'pointer' : '';
-        });
-
-        // hide popover on zoom - not working right now
-        /*var mouseWheelZooom = new ol.interaction.MouseWheelZoom();
-        mouseWheelZooom.on('change:active', function () {
-            $('#popover').popover('hide');
-        });
-        map.addInteraction(mouseWheelZooom);*/
-    }, 
-    
-    resizer: function () {
-        var resizeFun = function() {
-            var mapel = $(".app");
-            var height = $(window).height() - 80;
-            mapel.css("height", height);
-            mapel.css("width", $(window).width());
-            map.updateSize();
-        };
-        resizeFun()
-        $(window).resize(resizeFun);
-    },
-
-    updateStatus: function (status) {
-        $('#status').text(status);
-    } 
+        }
+    }
 };
 
 app.initialize();

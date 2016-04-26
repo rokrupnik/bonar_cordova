@@ -1,16 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' mqcdn.comdata.com mapquest.com gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src *">
+        
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -26,17 +18,38 @@
     </head>
     <body>
         <div class="app">
-            <div id="mapid"><div id="popup"></div></div>
-            <div id="popover-content" style="display: none"></div>
-            <!--<p id="status" class="">App init</p>-->
+                
+            <div id="tab-map" class="tab">
+                <div id="mapid"><div id="popup"></div></div>
+                <div id="popover-content" style="display: none"></div>
+            </div>
+            
+            <div id="tab-list" class="tab">
+                <h1>List...</h1>
+            </div>
+            
+            <div id="tab-restaurant" class="tab">
+                <h1 id="r-name">Name?</h1>
+                <p id="r-map">small map...</p>
+                <p id="r-address">Address</p>
+                <p id="r-price">Price</p>
+                <p id="r-features">Features</p>
+                <p id="r-opening">Opening</p>
+                <p id="r-telephone">Telephone</p>
+            </div>
+            
+            <div id="tab-more" class="tab">
+                <h1>More...</h1>
+            </div>
+            
         </div>
         
         <footer class="site-footer">
         <ul>
-                <li><img src="img/menu_map.svg"></li>
-                <li><img src="img/menu_list.svg"></li>
-                <li><img src="img/menu_restaurant.svg"></li>
-                <li><img src="img/menu_more.svg"></li>
+                <li><img src="img/menu_map.svg" name="map"></li>
+                <li><img src="img/menu_list.svg" name="list"></li>
+                <li><img src="img/menu_restaurant.svg" name="restaurant"></li>
+                <li><img src="img/menu_more.svg" name="more"></li>
         </ul>
         </footer>
 
