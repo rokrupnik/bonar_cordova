@@ -9,6 +9,8 @@ Bonar: port aplikacije na spletni strani http://bonar.si v cross-platform mobiln
     gulp browser # test the app in the browser
     gulp android # run the app on android device
 
+Za več informacij glej gulpfile.js in package.json.
+
 ## Troubleshooting
 Poženi `cordova requirements`, da preveriš, kaj potrebuješ za razvoj Cordova aplikacije.
 
@@ -26,5 +28,3 @@ sledi navodilom:
 Če ne najde tvojega telefona:  
 1. Namesti `adb` -> `sudo apt-get install android-tools-adb`  
 2. Omogoči USB debugging na svojem telefonu
-
-Za več informacij glej gulpfile.js in package.json
