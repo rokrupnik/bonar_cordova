@@ -19,7 +19,7 @@ Ob napaki:
     2. Create an AVD by running: /bin/android-sdk-linux/tools/android avd
     HINT: For a faster emulator, use an Intel System Image and install the HAXM device driver
 
-sledi navodilom:
+sledi navodilom:  
 1. namesti ustrezni "System image" z orodjem "Android SDK Manager" -> `android sdk`  
 2. Ustvari ustrezen "Android Virtual Device"z orodjem "Android Virtual Device Manager" -> `android avd`
 
