@@ -188,19 +188,19 @@ var app =
                 var priceRange = parseInt(feature.get('price'));
                 switch(priceRange) {
                     case 0:
-                        iconSrc += 'pin-0.png';
+                        iconSrc += 'pin-0.svg';
                         break;
                     case 1:
-                        iconSrc += 'pin-1.png';
+                        iconSrc += 'pin-1.svg';
                         break;
                     case 2:
-                        iconSrc += 'pin-2.png';
+                        iconSrc += 'pin-2.svg';
                         break;
                     case 3:
-                        iconSrc += 'pin-3.png';
+                        iconSrc += 'pin-3.svg';
                         break;
                     case 4:
-                        iconSrc += 'pin-4.png';
+                        iconSrc += 'pin-4.svg';
                         break;
                     default:
                         iconSrc += 'pin-cluster.png';
