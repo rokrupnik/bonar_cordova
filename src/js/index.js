@@ -222,17 +222,44 @@ var app =
         
         contentFun: function (feature) {
             var features = feature.get('features');
-            var content = '';
+            var content = $('<div>');
 
             if (features.length > 1) {
                 content = 'Na tem mestu je več restavracij.<br />Približaj za več info.';
             } else {
                 feature = features[0];
 
-                content = feature.get('name') + '<br />';
-                content += feature.get('address') + '<br />';
-                content += feature.get('price') + ' &euro;<br />';
-                content += feature.get('opening');
+                content.append($('<h4>').text(feature.get('name')));
+                content.append($('<address>').text(feature.get('address')));
+                content.append($('<p>').append($('<strong>').text(feature.get('price').toFixed(2).toString().replace('.', ',') + ' €')));
+
+                var telephoneData = feature.get('telephone');
+                if (telephoneData.length > 0) {
+                    var concatRestaurantTelephone = function (displayedText, telephone) {
+                        return displayedText + '<a href="tel:' + telephone + '">' + telephone + '</a>, ';
+                    };
+                    content.append($('<p>').html(_.trimEnd(_.reduce(telephoneData, concatRestaurantTelephone, 'Tel.: '), ', ')));
+                }
+
+                var openingData = feature.get('opening');
+                var openingList = $('<ul>');
+                openingList.append($('<li>').text('Delavnik: ' + openingData.week[0] + "-" + openingData.week[1]));
+                if (openingData.saturday) {
+                    openingList.append($('<li>').text('Sobota: ' + openingData.saturday[0] + "-" + openingData.saturday[1]));
+                }
+                if (openingData.sunday) {
+                    openingList.append($('<li>').text('Nedelja: ' + openingData.sunday[0] + "-" + openingData.sunday[1]));
+                }
+                content.append(openingList);
+
+                var featuresData = feature.get('features');
+                if (featuresData.length > 0) {
+                    var concatRestaurantFeatures = function (displayedText, featureId) {
+                        return displayedText + app.restaurantFeatures[featureId] + ', ';
+                    };
+                    content.append($('<p>').text(_.trimEnd(_.reduce(featuresData, concatRestaurantFeatures, 'Storitve: '), ', ')));
+                }
+
             }
             return content;
         },
@@ -258,19 +285,9 @@ var app =
                 feat.set('name', restaurant.name);
                 feat.set('address', restaurant.address);
                 feat.set('price', restaurant.price);
-
-                var opening = restaurant.opening.week[0];
-                opening += "-" + restaurant.opening.week[1];
-                if (restaurant.opening.saturday) {
-                    opening += ", sob: " + restaurant.opening.saturday[0];
-                    opening += "-" + restaurant.opening.saturday[1];
-                }
-                if (restaurant.opening.sunday) {
-                    opening += ", ned: " + restaurant.opening.sunday[0];
-                    opening += "-" + restaurant.opening.sunday[1];
-                }
-
-                feat.set('opening', opening);
+                feat.set('opening', restaurant.opening);
+                feat.set('features', restaurant.features);
+                feat.set('telephone', restaurant.telephone);
 
                 app.vectorSource.addFeature(feat);
             });
