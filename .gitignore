@@ -32,3 +32,5 @@ CordovaLib/
 
 # temp files
 *~
+
+npm-debug.log
