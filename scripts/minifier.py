@@ -103,4 +103,4 @@ if __name__ == '__main__':
     to_ret = minify(restaurants)
 
     with open(f_out, "w") as fp:
-        json.dump(to_ret, fp, ensure_ascii=False, separators=(',', ':'))
+        json.dump(to_ret, fp, ensure_ascii=False, separators=(',', ':'), indent=0, sort_keys=True)
