@@ -4,6 +4,8 @@ from os.path import isfile
 import json
 import requests
 
+ROUND_DEC = 1000
+
 def get_features(restaurants):
     features = {}
     for r in restaurants:
@@ -39,7 +41,9 @@ def get_cities(restaurants):
         coor = cities[city]
         c0 = [c[0] for c in coor]
         c1 = [c[1] for c in coor]
-        cities_ret.append((city, (sum(c0)/len(c0), sum(c1)/len(c1))))
+        lon = round(sum(c0)/len(c0) * ROUND_DEC) / ROUND_DEC
+        lat = round(sum(c1)/len(c1) * ROUND_DEC) / ROUND_DEC
+        cities_ret.append((city, lon, lat))
 
     for r in restaurants:
         r["city"] = [i for i, (c, _) in enumerate(cities_ret) if c == r["city"]][0]
