@@ -25,12 +25,12 @@ if [[ $lines -eq 0 ]]; then exit_updater "Nothing new" 0; fi;
 mv restaurants.json $repodir/restaurants.json
 cd $repodir
 
-git add restaurants.json
-if [[ $? -ne 0 ]]; then exit_updater "Cannot add" 1; fi;
-
 rm restaurants.json.gz 2>/dev/null
 gzip -k --best restaurants.json
 if [[ $? -ne 0 ]]; then exit_updater "Cannot gzip" 1; fi;
+
+git add restaurants.json restaurants.json.gz
+if [[ $? -ne 0 ]]; then exit_updater "Cannot add" 1; fi;
 
 git commit -m "Automatic update of restaurant.json: $now"
 if [[ $? -ne 0 ]]; then exit_updater "Cannot commit" 1; fi;
