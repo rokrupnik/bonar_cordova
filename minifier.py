@@ -43,7 +43,6 @@ def get_cities(restaurants):
         c1 = [c[1] for c in coor]
         lon = round(sum(c0) / len(c0) * ROUND_DEC) / ROUND_DEC
         lat = round(sum(c1) / len(c1) * ROUND_DEC) / ROUND_DEC
-        print(lon, lat)
         cities_ret.append((city, (lon, lat)))
 
     for r in restaurants:
